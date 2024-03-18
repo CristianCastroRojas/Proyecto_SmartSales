@@ -6,6 +6,7 @@ package Vista;
 
 import Modelo.Cliente;
 import Modelo.ClienteDao;
+import Modelo.Detalle;
 import Modelo.Productos;
 import Modelo.ProductosDao;
 import Modelo.Proveedor;
@@ -31,6 +32,7 @@ public class Sistema extends javax.swing.JFrame {
     ProductosDao proDao = new ProductosDao();
     Venta v = new Venta();
     VentaDao Vdao = new VentaDao();
+    Detalle Dv = new Detalle();
     DefaultTableModel modelo = new DefaultTableModel();// Variable para almacenar el modelo de la tabla
     int item;
     double Totalpagar = 0.00;
@@ -1721,6 +1723,7 @@ public class Sistema extends javax.swing.JFrame {
     private void btnGenerarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarVentaActionPerformed
         // TODO add your handling code here:
         RegistrarVenta();
+        RegistrarDetalle();
     }//GEN-LAST:event_btnGenerarVentaActionPerformed
 
     /**
@@ -1927,5 +1930,19 @@ public class Sistema extends javax.swing.JFrame {
         v.setVendedor(vendedor);
         v.setTotal(monto);
         Vdao.RegistrarVenta(v);
+    }
+    
+    private void RegistrarDetalle(){
+        for (int i = 0; i < TableVenta.getRowCount(); i++) {
+            String cod = TableVenta.getValueAt(i, 0).toString();
+            int cant = Integer.parseInt(TableVenta.getValueAt(i, 2).toString());
+            double precio = Double.parseDouble(TableVenta.getValueAt(i, 3).toString());
+            int id = 1;
+            Dv.setCod_pro(cod);
+            Dv.setCantidad(cant);
+            Dv.setPrecio(precio);
+            Dv.setId(id);
+            Vdao.RegistrarDetalle(Dv);
+        }
     }
 }

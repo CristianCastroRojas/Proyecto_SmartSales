@@ -11,6 +11,8 @@ import Modelo.ProductosDao;
 import Modelo.Proveedor;
 import Modelo.ProveedorDao;
 import Reportes.Excel;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import javax.swing.JOptionPane;
@@ -26,6 +28,7 @@ public class Sistema extends javax.swing.JFrame {
     Productos pro = new Productos();
     ProductosDao proDao = new ProductosDao();
     DefaultTableModel modelo = new DefaultTableModel();// Variable para almacenar el modelo de la tabla
+    int item;
 
     public Sistema() {
         initComponents();// Inicializar componentes de la interfaz gráfica
@@ -360,10 +363,20 @@ public class Sistema extends javax.swing.JFrame {
         });
 
         txtCodigoVenta.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        txtCodigoVenta.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtCodigoVentaKeyPressed(evt);
+            }
+        });
 
         txtDescripcionVenta.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
 
         txtCantidadVenta.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        txtCantidadVenta.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtCantidadVentaKeyPressed(evt);
+            }
+        });
 
         txtPrecioVenta.setEditable(false);
         txtPrecioVenta.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
@@ -438,15 +451,15 @@ public class Sistema extends javax.swing.JFrame {
                             .addComponent(txtDescripcionVenta))
                         .addGap(38, 38, 38)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtCantidadVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(txtTelefonoCV, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(txtDireccionCV, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(txtRazonCV, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(79, 79, 79)
+                                .addComponent(txtRazonCV, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtCantidadVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(63, 63, 63)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1565,6 +1578,88 @@ public class Sistema extends javax.swing.JFrame {
         Excel.reporte();
     }//GEN-LAST:event_btnExcelProActionPerformed
 
+     //Metodo se activa cuando se presiona una tecla en el campo de texto del código de venta
+    private void txtCodigoVentaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodigoVentaKeyPressed
+        // TODO add your handling code here:
+         // Verificar si la tecla presionada es la tecla "Enter"
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            // Verificar si el campo de texto del código de venta no está vacío
+            if (!"".equals(txtCodigoVenta.getText())) {
+                 // Obtener el código del producto ingresado por el usuario
+                String cod = txtCodigoVenta.getText();
+                // Buscar el producto en la base de datos utilizando el código proporcionado
+                pro = proDao.BuscarPro(cod);
+                // Verificar si se encontró un producto con el código especificado
+                if (pro.getNombre() != null) {
+                    // Si se encontró el producto, establecer la descripción, precio y stock en los campos de texto correspondientes
+                    txtDescripcionVenta.setText("" + pro.getNombre());
+                    txtPrecioVenta.setText("" + pro.getPrecio());
+                    txtStockDisponible.setText("" + pro.getStock());
+                     // Colocar el foco en el campo de texto de la cantidad de venta
+                    txtCantidadVenta.requestFocus();
+                }else{
+                    // Si no se encontró el producto, limpiar los campos de texto y colocar el foco nuevamente en el campo de texto del código de venta
+                    txtDescripcionVenta.setText("");
+                    txtPrecioVenta.setText("");
+                    txtStockDisponible.setText("");
+                    txtCodigoVenta.requestFocus();
+                }
+            }else{
+                // Si el campo de texto del código de venta está vacío, mostrar un mensaje de advertencia y colocar el foco en ese campo de texto
+                JOptionPane.showMessageDialog(null, "Ingrese el codigo del producto");
+                txtCodigoVenta.requestFocus();
+            }
+        }
+    }//GEN-LAST:event_txtCodigoVentaKeyPressed
+
+    //Método se activa cuando se presiona una tecla en el campo de texto de la cantidad de venta
+    private void txtCantidadVentaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCantidadVentaKeyPressed
+        // TODO add your handling code here:
+         // Verificar si la tecla presionada es la tecla "Enter"
+        if (evt.getKeyCode()== KeyEvent.VK_ENTER) {
+             // Verificar si el campo de texto de la cantidad de venta no está vacío
+            if(!"".equals(txtCantidadVenta.getText())){
+                // Obtener los valores necesarios del producto para la venta
+                String cod = txtCodigoVenta.getText();
+                String descripcion =txtDescripcionVenta.getText();
+                int cant = Integer.parseInt(txtCantidadVenta.getText());
+                double precio = Double.parseDouble(txtPrecioVenta.getText());
+                double total = cant*precio;
+                int stock = Integer.parseInt(txtStockDisponible.getText());
+                // Verificar si el stock disponible es suficiente para la venta
+                if (stock >=cant){
+                    // Incrementar el contador de ítems
+                    item = item +1;
+                    modelo =  (DefaultTableModel) TableVenta.getModel();
+                     // Crear una lista para almacenar los datos del producto
+                    ArrayList lista =  new ArrayList();
+                    lista.add(item);
+                    lista.add(cod);
+                    lista.add(descripcion);
+                    lista.add(cant);
+                    lista.add(precio);
+                    lista.add(total);
+                     // Crear un arreglo de objetos para agregar a la tabla
+                    Object[] O = new Object[5];
+                    O[0] = lista.get(1);
+                    O[1] = lista.get(2);
+                    O[2] = lista.get(3);
+                    O[3] = lista.get(4);
+                    O[4] = lista.get(5);
+                    // Agregar la fila a la tabla de ventas
+                    modelo.addRow(O);
+                    TableVenta.setModel(modelo);
+                }else{
+                     // Mostrar un mensaje de advertencia si el stock no es suficiente
+                    JOptionPane.showMessageDialog(null, "Stock no Disponible");
+                }
+            }else{
+                // Mostrar un mensaje de advertencia si el campo de cantidad está vacío
+                JOptionPane.showMessageDialog(null, "Ingrese cantidad");
+            }
+        }
+    }//GEN-LAST:event_txtCantidadVentaKeyPressed
+
     /**
      * @param args the command line arguments
      */
@@ -1741,5 +1836,6 @@ public class Sistema extends javax.swing.JFrame {
         txtCantPro.setText("");
         txtPrecioPro.setText("");
     }
+
 
 }

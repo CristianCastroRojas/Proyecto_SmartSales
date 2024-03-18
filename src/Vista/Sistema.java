@@ -29,6 +29,7 @@ public class Sistema extends javax.swing.JFrame {
     ProductosDao proDao = new ProductosDao();
     DefaultTableModel modelo = new DefaultTableModel();// Variable para almacenar el modelo de la tabla
     int item;
+    double Totalpagar = 0.00;
 
     public Sistema() {
         initComponents();// Inicializar componentes de la interfaz gráfica
@@ -408,6 +409,11 @@ public class Sistema extends javax.swing.JFrame {
         jLabel9.setText("Nombre Cliente");
 
         txtIdentificacionVenta.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        txtIdentificacionVenta.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtIdentificacionVentaKeyPressed(evt);
+            }
+        });
 
         txtNombreClienteVenta.setEditable(false);
         txtNombreClienteVenta.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
@@ -1234,6 +1240,10 @@ public class Sistema extends javax.swing.JFrame {
 
     private void btnEliminarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarVentaActionPerformed
         // TODO add your handling code here:
+        modelo = (DefaultTableModel) TableVenta.getModel();
+        modelo.removeRow(TableVenta.getSelectedRow());
+        TotalPagar();
+        txtCodigoVenta.requestFocus();
     }//GEN-LAST:event_btnEliminarVentaActionPerformed
 
     private void txtTelefonoProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTelefonoProveedorActionPerformed
@@ -1578,14 +1588,14 @@ public class Sistema extends javax.swing.JFrame {
         Excel.reporte();
     }//GEN-LAST:event_btnExcelProActionPerformed
 
-     //Metodo se activa cuando se presiona una tecla en el campo de texto del código de venta
+    //Metodo se activa cuando se presiona una tecla en el campo de texto del código de venta
     private void txtCodigoVentaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodigoVentaKeyPressed
         // TODO add your handling code here:
-         // Verificar si la tecla presionada es la tecla "Enter"
+        // Verificar si la tecla presionada es la tecla "Enter"
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             // Verificar si el campo de texto del código de venta no está vacío
             if (!"".equals(txtCodigoVenta.getText())) {
-                 // Obtener el código del producto ingresado por el usuario
+                // Obtener el código del producto ingresado por el usuario
                 String cod = txtCodigoVenta.getText();
                 // Buscar el producto en la base de datos utilizando el código proporcionado
                 pro = proDao.BuscarPro(cod);
@@ -1595,16 +1605,13 @@ public class Sistema extends javax.swing.JFrame {
                     txtDescripcionVenta.setText("" + pro.getNombre());
                     txtPrecioVenta.setText("" + pro.getPrecio());
                     txtStockDisponible.setText("" + pro.getStock());
-                     // Colocar el foco en el campo de texto de la cantidad de venta
+                    // Colocar el foco en el campo de texto de la cantidad de venta
                     txtCantidadVenta.requestFocus();
-                }else{
-                    // Si no se encontró el producto, limpiar los campos de texto y colocar el foco nuevamente en el campo de texto del código de venta
-                    txtDescripcionVenta.setText("");
-                    txtPrecioVenta.setText("");
-                    txtStockDisponible.setText("");
+                } else {
+                    LimpiarVenta();
                     txtCodigoVenta.requestFocus();
                 }
-            }else{
+            } else {
                 // Si el campo de texto del código de venta está vacío, mostrar un mensaje de advertencia y colocar el foco en ese campo de texto
                 JOptionPane.showMessageDialog(null, "Ingrese el codigo del producto");
                 txtCodigoVenta.requestFocus();
@@ -1615,31 +1622,37 @@ public class Sistema extends javax.swing.JFrame {
     //Método se activa cuando se presiona una tecla en el campo de texto de la cantidad de venta
     private void txtCantidadVentaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCantidadVentaKeyPressed
         // TODO add your handling code here:
-         // Verificar si la tecla presionada es la tecla "Enter"
-        if (evt.getKeyCode()== KeyEvent.VK_ENTER) {
-             // Verificar si el campo de texto de la cantidad de venta no está vacío
-            if(!"".equals(txtCantidadVenta.getText())){
+        // Verificar si la tecla presionada es la tecla "Enter"
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            // Verificar si el campo de texto de la cantidad de venta no está vacío
+            if (!"".equals(txtCantidadVenta.getText())) {
                 // Obtener los valores necesarios del producto para la venta
                 String cod = txtCodigoVenta.getText();
-                String descripcion =txtDescripcionVenta.getText();
+                String descripcion = txtDescripcionVenta.getText();
                 int cant = Integer.parseInt(txtCantidadVenta.getText());
                 double precio = Double.parseDouble(txtPrecioVenta.getText());
-                double total = cant*precio;
+                double total = cant * precio;
                 int stock = Integer.parseInt(txtStockDisponible.getText());
                 // Verificar si el stock disponible es suficiente para la venta
-                if (stock >=cant){
+                if (stock >= cant) {
                     // Incrementar el contador de ítems
-                    item = item +1;
-                    modelo =  (DefaultTableModel) TableVenta.getModel();
-                     // Crear una lista para almacenar los datos del producto
-                    ArrayList lista =  new ArrayList();
+                    item = item + 1;
+                    modelo = (DefaultTableModel) TableVenta.getModel();
+                    for (int i = 0; i < TableVenta.getRowCount(); i++) {
+                        if (TableVenta.getValueAt(i, 1).equals(txtDescripcionVenta.getText())) {
+                            JOptionPane.showMessageDialog(null, "Producto ya registrado");
+                            return;
+                        }
+                    }
+                    // Crear una lista para almacenar los datos del producto
+                    ArrayList lista = new ArrayList();
                     lista.add(item);
                     lista.add(cod);
                     lista.add(descripcion);
                     lista.add(cant);
                     lista.add(precio);
                     lista.add(total);
-                     // Crear un arreglo de objetos para agregar a la tabla
+                    // Crear un arreglo de objetos para agregar a la tabla
                     Object[] O = new Object[5];
                     O[0] = lista.get(1);
                     O[1] = lista.get(2);
@@ -1649,16 +1662,46 @@ public class Sistema extends javax.swing.JFrame {
                     // Agregar la fila a la tabla de ventas
                     modelo.addRow(O);
                     TableVenta.setModel(modelo);
-                }else{
-                     // Mostrar un mensaje de advertencia si el stock no es suficiente
+                    TotalPagar();
+                    LimpiarVenta();
+                    txtCodigoVenta.requestFocus();
+                } else {
+                    // Mostrar un mensaje de advertencia si el stock no es suficiente
                     JOptionPane.showMessageDialog(null, "Stock no Disponible");
                 }
-            }else{
+            } else {
                 // Mostrar un mensaje de advertencia si el campo de cantidad está vacío
                 JOptionPane.showMessageDialog(null, "Ingrese cantidad");
             }
         }
     }//GEN-LAST:event_txtCantidadVentaKeyPressed
+
+    //Metodo que se activa cuando se quiere registrar la venta de un cliente
+    private void txtIdentificacionVentaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIdentificacionVentaKeyPressed
+        // TODO add your handling code here:
+        // Verificar si se presionó la tecla Enter
+        if(evt.getKeyCode()== KeyEvent.VK_ENTER){
+            // Verificar si el campo de identificación del cliente no está vacío
+            if(!"".equals(txtIdentificacionVenta.getText())){
+                 // Obtener la identificación del cliente ingresada por el usuario
+                int identificacion = Integer.parseInt(txtIdentificacionVenta.getText());
+                  // Buscar el cliente en la base de datos utilizando la identificación ingresada
+                cl = client.BuscarCliente(identificacion);
+                // Verificar si se encontró un cliente con la identificación ingresada
+                if(cl.getNombre()!=null){
+                    // Mostrar la información del cliente encontrado en los campos correspondientes
+                    txtNombreClienteVenta.setText(""+cl.getNombre());
+                    txtTelefonoCV.setText(""+cl.getTelefono());
+                    txtDireccionCV.setText(""+cl.getDireccion());
+                    txtRazonCV.setText(""+cl.getRazon());
+                }else{
+                     // Limpiar el campo de identificación y mostrar un mensaje de cliente no encontrado
+                    txtIdentificacionVenta.setText("");
+                    JOptionPane.showMessageDialog(null, "El cliente no esta registrado");
+                }
+            }
+        }
+    }//GEN-LAST:event_txtIdentificacionVentaKeyPressed
 
     /**
      * @param args the command line arguments
@@ -1837,5 +1880,21 @@ public class Sistema extends javax.swing.JFrame {
         txtPrecioPro.setText("");
     }
 
-
+    private void TotalPagar() {
+        Totalpagar = 0.00;
+        int numFila = TableVenta.getRowCount();
+        for (int i = 0; i < numFila; i++) {
+            double cal = Double.parseDouble(String.valueOf(TableVenta.getModel().getValueAt(i, 4)));
+            Totalpagar = Totalpagar + cal;
+        }
+        LabelTotal.setText(String.format("$ %,.2f", Totalpagar));
+    }
+    
+    private void LimpiarVenta(){
+        txtCodigoVenta.setText("");
+        txtDescripcionVenta.setText("");
+        txtCantidadVenta.setText("");
+        txtStockDisponible.setText("");
+        txtPrecioVenta.setText("");
+    }
 }

@@ -9,16 +9,16 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 public class ClienteDao {
-    
+
     Conexion cn = new Conexion(); // Instancia de la clase Conexion para establecer la conexión a la base de datos
     Connection con; // Objeto para la conexión a la base de datos
     PreparedStatement ps; // Objeto para ejecutar consultas preparadas
     ResultSet rs;// Objeto para almacenar los resultados de una consulta
-    
+
     // Método para registrar un nuevo cliente en la base de datos
-    public boolean RegistrarCliente(Cliente cl){
+    public boolean RegistrarCliente(Cliente cl) {
         String sql = "INSERT INTO clientes (identificacion, nombre, telefono, direccion, razon) VALUES (?,?,?,?,?)"; // Consulta SQL para insertar un nuevo cliente
-        try{
+        try {
             con = cn.getConnection(); // Establecer la conexión a la base de datos
             ps = con.prepareStatement(sql); // Preparar la consulta SQL
             ps.setInt(1, cl.getIdentificacion()); // Establecer el valor del primer parámetro en la consulta preparada (identificación)
@@ -29,33 +29,33 @@ public class ClienteDao {
             ps.execute(); // Ejecutar la consulta
             // Si la consulta se ejecuta correctamente, devolver true
             return true;
-        } catch (SQLException e){
+        } catch (SQLException e) {
             // En caso de error, mostrar un mensaje de error
             JOptionPane.showMessageDialog(null, e.toString());
             // Devolver false para indicar que ocurrió un error durante la ejecución de la consulta
             return false;
         } finally {
-            try{
+            try {
                 con.close(); // Cerrar la conexión a la base de datos
-            } catch (SQLException e){
+            } catch (SQLException e) {
                 // En caso de error al cerrar la conexión, imprimir el mensaje de error en la consola
                 System.out.println(e.toString());
             }
         }
-    }  
-    
+    }
+
     // Método para obtener una lista de todos los clientes almacenados en la base de datos
-    public List ListarCliente(){
-        List<Cliente>ListaCl = new ArrayList();// Lista para almacenar objetos Cliente recuperados de la base de datos
+    public List ListarCliente() {
+        List<Cliente> ListaCl = new ArrayList();// Lista para almacenar objetos Cliente recuperados de la base de datos
         String sql = "SELECT * FROM clientes";// Consulta SQL para seleccionar todos los registros de la tabla clientes
-        try{
-           con = cn.getConnection();// Establecer la conexión a la base de datos
-           ps = con.prepareStatement(sql);// Preparar la consulta SQL
-           rs = ps.executeQuery();// Ejecutar la consulta y obtener el conjunto de resultados
-           // Recorrer cada fila del conjunto de resultados
+        try {
+            con = cn.getConnection();// Establecer la conexión a la base de datos
+            ps = con.prepareStatement(sql);// Preparar la consulta SQL
+            rs = ps.executeQuery();// Ejecutar la consulta y obtener el conjunto de resultados
+            // Recorrer cada fila del conjunto de resultados
             while (rs.next()) {
                 // Crear un nuevo objeto Cliente y asignar los valores recuperados de la base de datos
-                Cliente cl =  new Cliente();
+                Cliente cl = new Cliente();
                 cl.setId(rs.getInt("id"));
                 cl.setIdentificacion(rs.getInt("identificacion"));
                 cl.setNombre(rs.getString("nombre"));
@@ -65,16 +65,16 @@ public class ClienteDao {
                 // Agregar el objeto Cliente a la lista
                 ListaCl.add(cl);
             }
-        }catch(SQLException e){
+        } catch (SQLException e) {
             // En caso de error, imprimir el mensaje de error en la consola
             System.out.println(e.toString());
         }
         // Devolver la lista de Clientes
         return ListaCl;
     }
-    
+
     // Método para eliminar un cliente de la base de datos por su ID
-    public boolean EliminarCliente(int id){
+    public boolean EliminarCliente(int id) {
         // Consulta SQL para eliminar un cliente con el ID proporcionado
         String sql = "DELETE FROM clientes WHERE id = ?";
         try {
@@ -91,7 +91,7 @@ public class ClienteDao {
             System.out.println(e.toString());
             // Devolver false para indicar que ocurrió un error durante la ejecución de la consulta
             return false;
-        }finally{
+        } finally {
             // Cerrar la conexión a la base de datos en el bloque finally para asegurar que se cierre incluso si hay una excepción
             try {
                 con.close();
@@ -101,13 +101,13 @@ public class ClienteDao {
             }
         }
     }
-    
+
     // Método para modificar un cliente en la base de datos
-    public boolean ModificarCliente(Cliente cl){
+    public boolean ModificarCliente(Cliente cl) {
         // Consulta SQL para actualizar los datos de un cliente
         String sql = "UPDATE clientes SET identificacion=?, nombre=?, telefono=?, direccion=?, razon=? WHERE id=?";
         try {
-             // Preparar la consulta SQL
+            // Preparar la consulta SQL
             ps = con.prepareStatement(sql);
             // Establecer los valores de los parámetros en la consulta preparada
             ps.setInt(1, cl.getIdentificacion());
@@ -124,15 +124,44 @@ public class ClienteDao {
             System.out.println(e.toString());
             // Devolver false para indicar que ocurrió un error durante la ejecución de la consulta
             return false;
-         // Cerrar la conexión a la base de datos en el bloque finally para asegurar que se cierre incluso si hay una excepción
-        }finally{
-            try{
-               con.close();
+            // Cerrar la conexión a la base de datos en el bloque finally para asegurar que se cierre incluso si hay una excepción
+        } finally {
+            try {
+                con.close();
                 // En caso de error al cerrar la conexión, imprimir el mensaje de error en la consola
-            }catch(SQLException e){
+            } catch (SQLException e) {
                 System.out.println(e.toString());
             }
         }
     }
-}
 
+    //Método para buscar un cliente en la base de datos y generar venta
+    public Cliente BuscarCliente(int identificacion) {
+        // Crear un objeto Cliente para almacenar la información del cliente encontrado
+        Cliente cl = new Cliente();
+        // Definir la consulta SQL para buscar un cliente por identificación en la base de datos
+        String sql = "SELECT * FROM clientes WHERE identificacion = ?";
+        try {
+            // Establecer la conexión a la base de datos
+            con = cn.getConnection();
+            // Preparar la consulta SQL con el parámetro de identificación
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, identificacion);
+            // Ejecutar la consulta y obtener los resultados
+            rs = ps.executeQuery();
+            // Verificar si se encontraron resultados
+            if (rs.next()) {
+                // Asignar los valores del cliente encontrado al objeto Cliente
+                cl.setNombre(rs.getString("nombre"));
+                cl.setTelefono(rs.getString("telefono"));
+                cl.setDireccion(rs.getString("direccion"));
+                cl.setRazon(rs.getString("razon"));
+            }
+        } catch (SQLException e) {
+            // Imprimir el mensaje de error en caso de una excepción SQL
+            System.out.println(e.toString());
+        }
+        // Devolver el objeto Cliente encontrado (puede estar vacío si no se encontraron resultados)
+        return cl;
+    }
+}

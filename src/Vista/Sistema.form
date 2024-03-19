@@ -1738,7 +1738,8 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jLabel36" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel40" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jTextField29" alignment="0" min="-2" pref="157" max="-2" attributes="0"/>
+                                  <Component id="txtIdentificacionConfig" alignment="0" min="-2" pref="157" max="-2" attributes="0"/>
+                                  <Component id="txtIdConfig" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="86" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -1746,26 +1747,26 @@
                                       <EmptySpace min="-2" pref="169" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="jLabel39" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jTextField33" min="-2" pref="355" max="-2" attributes="0"/>
+                                          <Component id="txtDireccionConfig" min="-2" pref="355" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="jTextField30" alignment="0" min="-2" pref="395" max="-2" attributes="0"/>
+                                          <Component id="txtNombreConfig" alignment="0" min="-2" pref="395" max="-2" attributes="0"/>
                                           <Component id="jLabel37" alignment="0" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace min="-2" pref="93" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="jLabel38" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jTextField31" min="-2" pref="206" max="-2" attributes="0"/>
+                                          <Component id="txtTelefonoConfig" min="-2" pref="206" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>
                           </Group>
-                          <Component id="jTextField32" alignment="0" min="-2" pref="344" max="-2" attributes="0"/>
+                          <Component id="txtRazonConfig" alignment="0" min="-2" pref="344" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="384" max="-2" attributes="0"/>
-                              <Component id="jButton23" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnActualizarConfig" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
@@ -1781,7 +1782,10 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace pref="46" max="32767" attributes="0"/>
-                      <Component id="jLabel41" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel41" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtIdConfig" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel36" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -1790,9 +1794,9 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jTextField29" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jTextField30" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jTextField31" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtIdentificacionConfig" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtNombreConfig" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtTelefonoConfig" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -1801,11 +1805,11 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jTextField32" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jTextField33" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtRazonConfig" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtDireccionConfig" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="79" max="-2" attributes="0"/>
-                      <Component id="jButton23" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnActualizarConfig" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="150" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -1852,42 +1856,42 @@
                 <Property name="text" type="java.lang.String" value="Raz&#xf3;n social"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="jTextField29">
+            <Component class="javax.swing.JTextField" name="txtIdentificacionConfig">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Century Gothic" size="12" style="0"/>
                 </Property>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="jTextField30">
+            <Component class="javax.swing.JTextField" name="txtNombreConfig">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Century Gothic" size="12" style="0"/>
                 </Property>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="jTextField31">
+            <Component class="javax.swing.JTextField" name="txtTelefonoConfig">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Century Gothic" size="12" style="0"/>
                 </Property>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="jTextField32">
+            <Component class="javax.swing.JTextField" name="txtRazonConfig">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Century Gothic" size="12" style="0"/>
                 </Property>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="jTextField33">
+            <Component class="javax.swing.JTextField" name="txtDireccionConfig">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Century Gothic" size="12" style="0"/>
                 </Property>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton23">
+            <Component class="javax.swing.JButton" name="btnActualizarConfig">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Century Gothic" size="12" style="0"/>
@@ -1898,7 +1902,7 @@
                 <Property name="text" type="java.lang.String" value="Actualizar"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton23ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnActualizarConfigActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel41">
@@ -1908,6 +1912,8 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Datos de la Empresa"/>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtIdConfig">
             </Component>
           </SubComponents>
         </Container>

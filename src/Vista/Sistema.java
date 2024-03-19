@@ -6,6 +6,7 @@ package Vista;
 
 import Modelo.Cliente;
 import Modelo.ClienteDao;
+import Modelo.Config;
 import Modelo.Detalle;
 import Modelo.Productos;
 import Modelo.ProductosDao;
@@ -19,13 +20,18 @@ import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import java.awt.Desktop;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,7 +41,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
-public class Sistema extends javax.swing.JFrame {
+public final class Sistema extends javax.swing.JFrame {
 
     Cliente cl = new Cliente();// Objeto para almacenar información del cliente
     ClienteDao client = new ClienteDao();// Objeto para realizar operaciones relacionadas con el cliente
@@ -46,6 +52,7 @@ public class Sistema extends javax.swing.JFrame {
     Venta v = new Venta();
     VentaDao Vdao = new VentaDao();
     Detalle Dv = new Detalle();
+    Config conf = new Config();
     DefaultTableModel modelo = new DefaultTableModel();// Variable para almacenar el modelo de la tabla
     DefaultTableModel tmp = new DefaultTableModel();
     int item;
@@ -58,9 +65,10 @@ public class Sistema extends javax.swing.JFrame {
         txtIdProveedor.setVisible(false);
         txtIdVenta.setVisible(false);
         txtIdpro.setVisible(false);
+        txtIdConfig.setVisible(false);
         AutoCompleteDecorator.decorate(cbxProveedorPro);
         proDao.ConsultarProveedor(cbxProveedorPro);
-        pdf();
+        ListarConfig();
     }
 
     // Método para listar clientes en una tabla
@@ -124,6 +132,16 @@ public class Sistema extends javax.swing.JFrame {
             modelo.addRow(ob);
         }
         TableProducto.setModel(modelo);
+    }
+
+    public void ListarConfig() {
+        conf = proDao.BuscarDatos();
+        txtIdConfig.setText("" + conf.getId());
+        txtIdentificacionConfig.setText("" + conf.getIdentificacion());
+        txtNombreConfig.setText("" + conf.getNombre());
+        txtTelefonoConfig.setText("" + conf.getTelefono());
+        txtDireccionConfig.setText("" + conf.getDireccion());
+        txtRazonConfig.setText("" + conf.getRazon());
     }
 
     // Método para limpiar todos los datos de una tabla
@@ -248,13 +266,14 @@ public class Sistema extends javax.swing.JFrame {
         jLabel38 = new javax.swing.JLabel();
         jLabel39 = new javax.swing.JLabel();
         jLabel40 = new javax.swing.JLabel();
-        jTextField29 = new javax.swing.JTextField();
-        jTextField30 = new javax.swing.JTextField();
-        jTextField31 = new javax.swing.JTextField();
-        jTextField32 = new javax.swing.JTextField();
-        jTextField33 = new javax.swing.JTextField();
-        jButton23 = new javax.swing.JButton();
+        txtIdentificacionConfig = new javax.swing.JTextField();
+        txtNombreConfig = new javax.swing.JTextField();
+        txtTelefonoConfig = new javax.swing.JTextField();
+        txtRazonConfig = new javax.swing.JTextField();
+        txtDireccionConfig = new javax.swing.JTextField();
+        btnActualizarConfig = new javax.swing.JButton();
         jLabel41 = new javax.swing.JLabel();
+        txtIdConfig = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(null);
@@ -1174,22 +1193,22 @@ public class Sistema extends javax.swing.JFrame {
         jLabel40.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
         jLabel40.setText("Razón social");
 
-        jTextField29.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        txtIdentificacionConfig.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
 
-        jTextField30.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        txtNombreConfig.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
 
-        jTextField31.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        txtTelefonoConfig.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
 
-        jTextField32.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        txtRazonConfig.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
 
-        jTextField33.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        txtDireccionConfig.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
 
-        jButton23.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        jButton23.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Actualizar.png"))); // NOI18N
-        jButton23.setText("Actualizar");
-        jButton23.addActionListener(new java.awt.event.ActionListener() {
+        btnActualizarConfig.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        btnActualizarConfig.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Actualizar.png"))); // NOI18N
+        btnActualizarConfig.setText("Actualizar");
+        btnActualizarConfig.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton23ActionPerformed(evt);
+                btnActualizarConfigActionPerformed(evt);
             }
         });
 
@@ -1208,26 +1227,27 @@ public class Sistema extends javax.swing.JFrame {
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel36)
                             .addComponent(jLabel40)
-                            .addComponent(jTextField29, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtIdentificacionConfig, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtIdConfig, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(86, 86, 86)
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel8Layout.createSequentialGroup()
                                 .addGap(169, 169, 169)
                                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel39)
-                                    .addComponent(jTextField33, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(txtDireccionConfig, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel8Layout.createSequentialGroup()
                                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField30, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtNombreConfig, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel37))
                                 .addGap(93, 93, 93)
                                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel38)
-                                    .addComponent(jTextField31, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                    .addComponent(jTextField32, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtTelefonoConfig, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addComponent(txtRazonConfig, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel8Layout.createSequentialGroup()
                         .addGap(384, 384, 384)
-                        .addComponent(jButton23)))
+                        .addComponent(btnActualizarConfig)))
                 .addGap(34, 34, 34))
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addGap(252, 252, 252)
@@ -1238,7 +1258,9 @@ public class Sistema extends javax.swing.JFrame {
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
                 .addContainerGap(46, Short.MAX_VALUE)
-                .addComponent(jLabel41)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel41)
+                    .addComponent(txtIdConfig, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(44, 44, 44)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel36)
@@ -1246,19 +1268,19 @@ public class Sistema extends javax.swing.JFrame {
                     .addComponent(jLabel38))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField29, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField30, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField31, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtIdentificacionConfig, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtNombreConfig, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtTelefonoConfig, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(64, 64, 64)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel40)
                     .addComponent(jLabel39))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField32, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField33, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtRazonConfig, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtDireccionConfig, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(79, 79, 79)
-                .addComponent(jButton23)
+                .addComponent(btnActualizarConfig)
                 .addGap(150, 150, 150))
         );
 
@@ -1293,9 +1315,9 @@ public class Sistema extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnPdfVentasActionPerformed
 
-    private void jButton23ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton23ActionPerformed
+    private void btnActualizarConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarConfigActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton23ActionPerformed
+    }//GEN-LAST:event_btnActualizarConfigActionPerformed
 
     private void txtCantProActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCantProActionPerformed
         // TODO add your handling code here:
@@ -1746,7 +1768,7 @@ public class Sistema extends javax.swing.JFrame {
         // TODO add your handling code here:
         RegistrarVenta();
         RegistrarDetalle();
-        JOptionPane.showMessageDialog(null, "Venta Exitosa");
+        pdf();
         ActualizarStock();
         LimpiarTableVenta();
         LimpiarClienteVenta();
@@ -1802,6 +1824,7 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JTable TableProveedor;
     private javax.swing.JTable TableVenta;
     private javax.swing.JTable TableVentas;
+    private javax.swing.JButton btnActualizarConfig;
     private javax.swing.JButton btnClientes;
     private javax.swing.JButton btnConfig;
     private javax.swing.JButton btnEditarCliente;
@@ -1825,7 +1848,6 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JButton btnProveedor;
     private javax.swing.JButton btnVentas;
     private javax.swing.JComboBox<String> cbxProveedorPro;
-    private javax.swing.JButton jButton23;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
@@ -1870,11 +1892,6 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextField jTextField29;
-    private javax.swing.JTextField jTextField30;
-    private javax.swing.JTextField jTextField31;
-    private javax.swing.JTextField jTextField32;
-    private javax.swing.JTextField jTextField33;
     private javax.swing.JTextField txtCantPro;
     private javax.swing.JTextField txtCantidadVenta;
     private javax.swing.JTextField txtCodigoPro;
@@ -1883,26 +1900,32 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JTextField txtDescripcionVenta;
     private javax.swing.JTextField txtDireccionCV;
     private javax.swing.JTextField txtDireccionCliente;
+    private javax.swing.JTextField txtDireccionConfig;
     private javax.swing.JTextField txtDireccionProveedor;
     private javax.swing.JTextField txtIdCliente;
+    private javax.swing.JTextField txtIdConfig;
     private javax.swing.JTextField txtIdPro;
     private javax.swing.JTextField txtIdProveedor;
     private javax.swing.JTextField txtIdVenta;
     private javax.swing.JTextField txtIdentificacionCliente;
+    private javax.swing.JTextField txtIdentificacionConfig;
     private javax.swing.JTextField txtIdentificacionVenta;
     private javax.swing.JTextField txtIdpro;
     private javax.swing.JTextField txtNitProveedor;
     private javax.swing.JTextField txtNombreCliente;
     private javax.swing.JTextField txtNombreClienteVenta;
+    private javax.swing.JTextField txtNombreConfig;
     private javax.swing.JTextField txtNombreProveedor;
     private javax.swing.JTextField txtPrecioPro;
     private javax.swing.JTextField txtPrecioVenta;
     private javax.swing.JTextField txtRazonCV;
     private javax.swing.JTextField txtRazonCliente;
+    private javax.swing.JTextField txtRazonConfig;
     private javax.swing.JTextField txtRazonProveedor;
     private javax.swing.JTextField txtStockDisponible;
     private javax.swing.JTextField txtTelefonoCV;
     private javax.swing.JTextField txtTelefonoCliente;
+    private javax.swing.JTextField txtTelefonoConfig;
     private javax.swing.JTextField txtTelefonoProveedor;
     // End of variables declaration//GEN-END:variables
     // Método para limpiar los campos de texto relacionados con la información de un cliente
@@ -1998,8 +2021,8 @@ public class Sistema extends javax.swing.JFrame {
     }
 
     private void LimpiarClienteVenta() {
-        txtIdVenta.setText("");
-        txtNombreCliente.setText("");
+        txtIdentificacionVenta.setText("");
+        txtNombreClienteVenta.setText("");
         txtTelefonoCV.setText("");
         txtDireccionCV.setText("");
         txtRazonCV.setText("");
@@ -2007,8 +2030,9 @@ public class Sistema extends javax.swing.JFrame {
 
     private void pdf() {
         try {
+            int id = Vdao.IdVenta();
             FileOutputStream archivo;
-            File file = new File("src/pdf/venta.pdf");
+            File file = new File("src/pdf/venta" + id + ".pdf");
             archivo = new FileOutputStream(file);
             Document doc = new Document();
             PdfWriter.getInstance(doc, archivo);
@@ -2019,7 +2043,7 @@ public class Sistema extends javax.swing.JFrame {
             Font negrita = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD, BaseColor.BLUE);
             fecha.add(Chunk.NEWLINE);
             Date date = new Date();
-            fecha.add("Factura: 1\n"+ "Fecha: " + new SimpleDateFormat("dd-mm-yyyy").format(date) + "\n\n");
+            fecha.add("Factura:" + id + "\n" + "Fecha: " + new SimpleDateFormat("dd-mm-yyyy").format(date) + "\n\n");
 
             PdfPTable Encabezado = new PdfPTable(4);
             Encabezado.setWidthPercentage(100);
@@ -2030,23 +2054,109 @@ public class Sistema extends javax.swing.JFrame {
 
             Encabezado.addCell(img);
 
-            String nit = "1090497093";
-            String nom = "SmartSales";
-            String tel = "3232927924";
-            String dir = "Cúcuta";
-            String ra = "SmartSales";
+            String ide = txtIdentificacionConfig.getText();
+            String nom = txtNombreConfig.getText();
+            String tel = txtTelefonoConfig.getText();
+            String dir = txtDireccionConfig.getText();
+            String ra = txtRazonConfig.getText();
 
             Encabezado.addCell("");
-            Encabezado.addCell("Nit :" +nit+ "\nNombre: " +nom+ "\nTelefono: " +tel+ "\nDireccion: " +dir+ "\nRazon: "+ra
+            Encabezado.addCell("Nit :" + ide + "\nNombre: " + nom + "\nTelefono: " + tel + "\nDireccion: " + dir + "\nRazon: " + ra
             );
             Encabezado.addCell(fecha);
             doc.add(Encabezado);
-            
-            
+
+            Paragraph cli = new Paragraph();
+            cli.add(Chunk.NEWLINE);
+            cli.add("Datos de los clientes" + "\n\n");
+            doc.add(cli);
+
+            PdfPTable tablacli = new PdfPTable(4);
+            tablacli.setWidthPercentage(100);
+            tablacli.getDefaultCell().setBorder(0);
+            float[] Columnacli = new float[]{20f, 50f, 30f, 40f,};
+            tablacli.setWidths(Columnacli);
+            tablacli.setHorizontalAlignment(Element.ALIGN_LEFT);
+            PdfPCell cl1 = new PdfPCell(new Phrase("Identificacion/NIT", negrita));
+            PdfPCell cl2 = new PdfPCell(new Phrase("Nombre", negrita));
+            PdfPCell cl3 = new PdfPCell(new Phrase("Telefono", negrita));
+            PdfPCell cl4 = new PdfPCell(new Phrase("Direccion", negrita));
+            cl1.setBorder(0);
+            cl2.setBorder(0);
+            cl3.setBorder(0);
+            cl4.setBorder(0);
+            tablacli.addCell(cl1);
+            tablacli.addCell(cl2);
+            tablacli.addCell(cl3);
+            tablacli.addCell(cl4);
+            tablacli.addCell(txtIdentificacionVenta.getText());
+            tablacli.addCell(txtNombreClienteVenta.getText());
+            tablacli.addCell(txtTelefonoCV.getText());
+            tablacli.addCell(txtDireccionCV.getText());
+
+            doc.add(tablacli);
+
+            //Productos
+            PdfPTable tablapro = new PdfPTable(4);
+            tablapro.setWidthPercentage(100);
+            tablapro.getDefaultCell().setBorder(0);
+            float[] Columnapro = new float[]{10f, 50f, 15f, 20f,};
+            tablapro.setWidths(Columnacli);
+            tablapro.setHorizontalAlignment(Element.ALIGN_LEFT);
+            PdfPCell pro1 = new PdfPCell(new Phrase("Cantidad", negrita));
+            PdfPCell pro2 = new PdfPCell(new Phrase("Descripcion", negrita));
+            PdfPCell pro3 = new PdfPCell(new Phrase("Precio Unitario", negrita));
+            PdfPCell pro4 = new PdfPCell(new Phrase("Precio Total", negrita));
+            pro1.setBorder(0);
+            pro2.setBorder(0);
+            pro3.setBorder(0);
+            pro4.setBorder(0);
+            pro1.setBackgroundColor(BaseColor.DARK_GRAY);
+            pro2.setBackgroundColor(BaseColor.DARK_GRAY);
+            pro3.setBackgroundColor(BaseColor.DARK_GRAY);
+            pro4.setBackgroundColor(BaseColor.DARK_GRAY);
+            tablapro.addCell(pro1);
+            tablapro.addCell(pro2);
+            tablapro.addCell(pro3);
+            tablapro.addCell(pro4);
+            for (int i = 0; i < TableVenta.getRowCount(); i++) {
+                String producto = TableVenta.getValueAt(i, 1).toString();
+                String cantidad = TableVenta.getValueAt(i, 2).toString();
+                String precio = TableVenta.getValueAt(i, 3).toString();
+                String total = TableVenta.getValueAt(i, 4).toString();
+                tablapro.addCell(cantidad);
+                tablapro.addCell(producto);
+                tablapro.addCell(precio);
+                tablapro.addCell(total);
+            }
+            doc.add(tablapro);
+
+            Paragraph info = new Paragraph();
+            info.add(Chunk.NEWLINE);
+            info.add("Total a Pagar: " + Totalpagar);
+            info.setAlignment(Element.ALIGN_RIGHT);
+            doc.add(info);
+
+            Paragraph firma = new Paragraph();
+            firma.add(Chunk.NEWLINE);
+            firma.add("Cancelación y Firma\n\n");
+            firma.add("--------------------------");
+            firma.setAlignment(Element.ALIGN_CENTER);
+            doc.add(firma);
+
+            Paragraph mensaje = new Paragraph();
+            mensaje.add(Chunk.NEWLINE);
+            mensaje.add("Gracias por su compra");
+            mensaje.setAlignment(Element.ALIGN_CENTER);
+            doc.add(mensaje);
+
             doc.close();
             archivo.close();
 
-        } catch (Exception e) {
+            Desktop.getDesktop().open(file);
+
+        } catch (DocumentException | IOException e) {
+            System.err.println(e.toString());
         }
     }
 }

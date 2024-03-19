@@ -19,9 +19,9 @@ public class VentaDao {
         try {
             con = cn.getConnection();
             ps = con.prepareStatement(sql);
-            ps.executeQuery();
-            if(rs.next()){
-                id=rs.getInt(1);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt(1);
             }
         } catch (SQLException e) {
             System.out.println(e.toString());
@@ -71,5 +71,20 @@ public class VentaDao {
             }
         }
         return r;
+    }
+
+    public boolean ActualizarStock(int cant, String cod) {
+        String sql = "UPDATE productos SET stock = ? WHERE codigo = ?";
+        try {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, cant);
+            ps.setString(2, cod);
+            ps.execute();
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e.toString());
+            return false;
+        }
     }
 }

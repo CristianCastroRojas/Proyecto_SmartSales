@@ -34,6 +34,7 @@ public class Sistema extends javax.swing.JFrame {
     VentaDao Vdao = new VentaDao();
     Detalle Dv = new Detalle();
     DefaultTableModel modelo = new DefaultTableModel();// Variable para almacenar el modelo de la tabla
+    DefaultTableModel tmp = new DefaultTableModel();
     int item;
     double Totalpagar = 0.00;
 
@@ -1661,7 +1662,7 @@ public class Sistema extends javax.swing.JFrame {
                 if (stock >= cant) {
                     // Incrementar el contador de ítems
                     item = item + 1;
-                    DefaultTableModel tmp = (DefaultTableModel) TableVenta.getModel();
+                    tmp = (DefaultTableModel) TableVenta.getModel();
                     for (int i = 0; i < TableVenta.getRowCount(); i++) {
                         if (TableVenta.getValueAt(i, 1).equals(txtDescripcionVenta.getText())) {
                             JOptionPane.showMessageDialog(null, "Producto ya registrado");
@@ -1704,22 +1705,22 @@ public class Sistema extends javax.swing.JFrame {
     private void txtIdentificacionVentaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIdentificacionVentaKeyPressed
         // TODO add your handling code here:
         // Verificar si se presionó la tecla Enter
-        if(evt.getKeyCode()== KeyEvent.VK_ENTER){
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             // Verificar si el campo de identificación del cliente no está vacío
-            if(!"".equals(txtIdentificacionVenta.getText())){
-                 // Obtener la identificación del cliente ingresada por el usuario
+            if (!"".equals(txtIdentificacionVenta.getText())) {
+                // Obtener la identificación del cliente ingresada por el usuario
                 int identificacion = Integer.parseInt(txtIdentificacionVenta.getText());
-                  // Buscar el cliente en la base de datos utilizando la identificación ingresada
+                // Buscar el cliente en la base de datos utilizando la identificación ingresada
                 cl = client.BuscarCliente(identificacion);
                 // Verificar si se encontró un cliente con la identificación ingresada
-                if(cl.getNombre()!=null){
+                if (cl.getNombre() != null) {
                     // Mostrar la información del cliente encontrado en los campos correspondientes
-                    txtNombreClienteVenta.setText(""+cl.getNombre());
-                    txtTelefonoCV.setText(""+cl.getTelefono());
-                    txtDireccionCV.setText(""+cl.getDireccion());
-                    txtRazonCV.setText(""+cl.getRazon());
-                }else{
-                     // Limpiar el campo de identificación y mostrar un mensaje de cliente no encontrado
+                    txtNombreClienteVenta.setText("" + cl.getNombre());
+                    txtTelefonoCV.setText("" + cl.getTelefono());
+                    txtDireccionCV.setText("" + cl.getDireccion());
+                    txtRazonCV.setText("" + cl.getRazon());
+                } else {
+                    // Limpiar el campo de identificación y mostrar un mensaje de cliente no encontrado
                     txtIdentificacionVenta.setText("");
                     JOptionPane.showMessageDialog(null, "El cliente no esta registrado");
                 }
@@ -1731,6 +1732,11 @@ public class Sistema extends javax.swing.JFrame {
         // TODO add your handling code here:
         RegistrarVenta();
         RegistrarDetalle();
+        JOptionPane.showMessageDialog(null, "Venta Exitosa");
+        ActualizarStock();
+        LimpiarTableVenta();
+        LimpiarClienteVenta();
+
     }//GEN-LAST:event_btnGenerarVentaActionPerformed
 
     private void btnNuevaVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaVentaActionPerformed
@@ -1925,8 +1931,8 @@ public class Sistema extends javax.swing.JFrame {
         }
         LabelTotal.setText(String.format("$ %,.2f", Totalpagar));
     }
-    
-    private void LimpiarVenta(){
+
+    private void LimpiarVenta() {
         txtCodigoVenta.setText("");
         txtDescripcionVenta.setText("");
         txtCantidadVenta.setText("");
@@ -1934,8 +1940,8 @@ public class Sistema extends javax.swing.JFrame {
         txtPrecioVenta.setText("");
         txtIdVenta.setText("");
     }
-    
-    private void RegistrarVenta(){
+
+    private void RegistrarVenta() {
         String cliente = txtNombreClienteVenta.getText();
         String vendedor = LabelVendedor.getText();
         double monto = Totalpagar;
@@ -1944,8 +1950,8 @@ public class Sistema extends javax.swing.JFrame {
         v.setTotal(monto);
         Vdao.RegistrarVenta(v);
     }
-    
-    private void RegistrarDetalle(){
+
+    private void RegistrarDetalle() {
         int id = Vdao.IdVenta();
         for (int i = 0; i < TableVenta.getRowCount(); i++) {
             String cod = TableVenta.getValueAt(i, 0).toString();
@@ -1957,5 +1963,31 @@ public class Sistema extends javax.swing.JFrame {
             Dv.setId(id);
             Vdao.RegistrarDetalle(Dv);
         }
+    }
+
+    private void ActualizarStock() {
+        for (int i = 0; i < TableVenta.getRowCount(); i++) {
+            String cod = TableVenta.getValueAt(i, 0).toString();
+            int cant = Integer.parseInt(TableVenta.getValueAt(i, 2).toString());
+            pro = proDao.BuscarPro(cod);
+            int StockActual = pro.getStock() - cant;
+            Vdao.ActualizarStock(StockActual, cod);
+        }
+    }
+
+    private void LimpiarTableVenta() {
+        tmp = (DefaultTableModel) TableVenta.getModel();
+        int fila = TableVenta.getRowCount();
+        for (int i = 0; i < fila; i++) {
+            tmp.removeRow(0);
+        }
+    }
+
+    private void LimpiarClienteVenta() {
+        txtIdVenta.setText("");
+        txtNombreCliente.setText("");
+        txtTelefonoCV.setText("");
+        txtDireccionCV.setText("");
+        txtRazonCV.setText("");
     }
 }

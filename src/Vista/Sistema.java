@@ -42,6 +42,8 @@ public class Sistema extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         txtIdCliente.setVisible(false);
         txtIdProveedor.setVisible(false);
+        txtIdVenta.setVisible(false);
+        txtIdpro.setVisible(false);
         AutoCompleteDecorator.decorate(cbxProveedorPro);
         proDao.ConsultarProveedor(cbxProveedorPro);
     }
@@ -248,6 +250,11 @@ public class Sistema extends javax.swing.JFrame {
         btnNuevaVenta.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         btnNuevaVenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Ventas.png"))); // NOI18N
         btnNuevaVenta.setText("Nueva Venta");
+        btnNuevaVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevaVentaActionPerformed(evt);
+            }
+        });
 
         btnClientes.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         btnClientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Clientes.png"))); // NOI18N
@@ -1654,7 +1661,7 @@ public class Sistema extends javax.swing.JFrame {
                 if (stock >= cant) {
                     // Incrementar el contador de ítems
                     item = item + 1;
-                    modelo = (DefaultTableModel) TableVenta.getModel();
+                    DefaultTableModel tmp = (DefaultTableModel) TableVenta.getModel();
                     for (int i = 0; i < TableVenta.getRowCount(); i++) {
                         if (TableVenta.getValueAt(i, 1).equals(txtDescripcionVenta.getText())) {
                             JOptionPane.showMessageDialog(null, "Producto ya registrado");
@@ -1677,8 +1684,8 @@ public class Sistema extends javax.swing.JFrame {
                     O[3] = lista.get(4);
                     O[4] = lista.get(5);
                     // Agregar la fila a la tabla de ventas
-                    modelo.addRow(O);
-                    TableVenta.setModel(modelo);
+                    tmp.addRow(O);
+                    TableVenta.setModel(tmp);
                     TotalPagar();
                     LimpiarVenta();
                     txtCodigoVenta.requestFocus();
@@ -1725,6 +1732,11 @@ public class Sistema extends javax.swing.JFrame {
         RegistrarVenta();
         RegistrarDetalle();
     }//GEN-LAST:event_btnGenerarVentaActionPerformed
+
+    private void btnNuevaVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaVentaActionPerformed
+        // TODO add your handling code here:
+        jTabbedPane1.setSelectedIndex(0);
+    }//GEN-LAST:event_btnNuevaVentaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1920,6 +1932,7 @@ public class Sistema extends javax.swing.JFrame {
         txtCantidadVenta.setText("");
         txtStockDisponible.setText("");
         txtPrecioVenta.setText("");
+        txtIdVenta.setText("");
     }
     
     private void RegistrarVenta(){
@@ -1933,11 +1946,11 @@ public class Sistema extends javax.swing.JFrame {
     }
     
     private void RegistrarDetalle(){
+        int id = Vdao.IdVenta();
         for (int i = 0; i < TableVenta.getRowCount(); i++) {
             String cod = TableVenta.getValueAt(i, 0).toString();
             int cant = Integer.parseInt(TableVenta.getValueAt(i, 2).toString());
             double precio = Double.parseDouble(TableVenta.getValueAt(i, 3).toString());
-            int id = 1;
             Dv.setCod_pro(cod);
             Dv.setCantidad(cant);
             Dv.setPrecio(precio);

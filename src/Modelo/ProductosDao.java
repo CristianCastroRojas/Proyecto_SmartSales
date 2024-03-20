@@ -195,7 +195,7 @@ public class ProductosDao {
         return producto;
     }
 
-    public Config BuscarDatos () {
+    public Config BuscarDatos() {
         Config conf = new Config();
         String SQL = "SELECT * from config";
         try {
@@ -214,6 +214,39 @@ public class ProductosDao {
             System.out.println(e.toString());
         }
         return conf;
+    }
+
+    // Método para modificar un cliente en la base de datos
+    public boolean ModificarDatos(Config conf) {
+        // Consulta SQL para actualizar los datos de un producto
+        String sql = "UPDATE config SET identificacion=?, nombre=?, telefono=?, direccion=?, razon=? WHERE id=?";
+        try {
+            // Preparar la consulta SQL
+            ps = con.prepareStatement(sql);
+            // Establecer los valores de los parámetros en la consulta preparada
+            ps.setString(1, conf.getIdentificacion());
+            ps.setString(2, conf.getNombre());
+            ps.setString(3, conf.getTelefono());
+            ps.setString(4, conf.getDireccion());
+            ps.setString(5, conf.getRazon());
+            ps.setInt(6, conf.getId());// Establecer el ID del producto en el último parámetro
+            ps.execute();
+            // Devolver true para indicar que la modificación se realizó con éxito
+            return true;
+        } catch (SQLException e) {
+            // En caso de error, imprimir el mensaje de error en la consola
+            System.out.println(e.toString());
+            // Devolver false para indicar que ocurrió un error durante la ejecución de la consulta
+            return false;
+            // Cerrar la conexión a la base de datos en el bloque finally para asegurar que se cierre incluso si hay una excepción
+        } finally {
+            try {
+                con.close();
+                // En caso de error al cerrar la conexión, imprimir el mensaje de error en la consola
+            } catch (SQLException e) {
+                System.out.println(e.toString());
+            }
+        }
     }
 
 }

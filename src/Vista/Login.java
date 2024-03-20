@@ -56,6 +56,7 @@ public class Login extends javax.swing.JFrame {
         txtPass = new javax.swing.JPasswordField();
         btnIniciar = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -122,6 +123,9 @@ public class Login extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         jLabel4.setText("© 2024 - Todos los derechos reservados");
 
+        jLabel7.setFont(new java.awt.Font("Century Gothic", 2, 8)); // NOI18N
+        jLabel7.setText("Diseñado por Cristian Andres Castro Rojas");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -135,7 +139,8 @@ public class Login extends javax.swing.JFrame {
                     .addComponent(jLabel3)
                     .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnIniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel7))
                 .addGap(100, 100, 100))
         );
         jPanel2Layout.setVerticalGroup(
@@ -155,7 +160,9 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(btnIniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(56, 56, 56)
                 .addComponent(jLabel4)
-                .addContainerGap(55, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                .addComponent(jLabel7)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -224,6 +231,7 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField txtCorreo;

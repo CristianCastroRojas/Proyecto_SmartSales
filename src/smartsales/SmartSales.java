@@ -4,6 +4,8 @@
  */
 package smartsales;
 
+import Vista.Login;
+
 /**
  *
  * @author crist
@@ -15,6 +17,8 @@ public class SmartSales {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        Login lg = new Login();
+        lg.setVisible(true);
     }
     
 }

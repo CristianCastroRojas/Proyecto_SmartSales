@@ -27,7 +27,7 @@ public class Login extends javax.swing.JFrame {
             // Si se encuentra un usuario válido en la base de datos
             if(lg.getCorreo()!= null && lg.getPass()!= null){
                  // Mostrar la ventana del sistema y cerrar la ventana de inicio de sesión
-                Sistema sis =  new Sistema();
+                Sistema sis =  new Sistema(lg);
                 sis.setVisible(true);
                 dispose();
             }else{

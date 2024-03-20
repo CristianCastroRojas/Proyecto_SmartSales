@@ -1,21 +1,27 @@
-
 package Modelo;
 // Clase que representa un objeto de inicio de sesión con sus atributos
+
 public class login {
+
     private int id;// Identificador único del usuario
     private String nombre;// Nombre del usuario
     private String correo;// Correo electrónico del usuario
     private String pass;// Contraseña del usuario
-     // Constructor vacío por defecto
+    private String rol;
+    // Constructor vacío por defecto
+
     public login() {
     }
+
     // Constructor con parámetros para inicializar todos los atributos
-    public login(int id, String nombre, String correo, String pass) {
+    public login(int id, String nombre, String correo, String pass, String rol) {
         this.id = id;
         this.nombre = nombre;
         this.correo = correo;
         this.pass = pass;
+        this.rol = rol;
     }
+
     // Métodos para acceder y modificar el atributo 'id'
     public int getId() {
         return id;
@@ -24,6 +30,7 @@ public class login {
     public void setId(int id) {
         this.id = id;
     }
+
     // Métodos para acceder y modificar el atributo 'nombre'
     public String getNombre() {
         return nombre;
@@ -32,6 +39,7 @@ public class login {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
     // Métodos para acceder y modificar el atributo 'correo'
     public String getCorreo() {
         return correo;
@@ -40,6 +48,7 @@ public class login {
     public void setCorreo(String correo) {
         this.correo = correo;
     }
+
     // Métodos para acceder y modificar el atributo 'pass'
     public String getPass() {
         return pass;
@@ -48,6 +57,14 @@ public class login {
     public void setPass(String pass) {
         this.pass = pass;
     }
+
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
     
-    
+
 }

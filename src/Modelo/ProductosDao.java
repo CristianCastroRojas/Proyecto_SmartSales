@@ -208,7 +208,7 @@ public class ProductosDao {
                 conf.setNombre(rs.getString("nombre"));
                 conf.setTelefono(rs.getString("telefono"));
                 conf.setDireccion(rs.getString("direccion"));
-                conf.setDireccion(rs.getString("razon"));
+                conf.setRazon(rs.getString("razon"));
             }
         } catch (SQLException e) {
             System.out.println(e.toString());

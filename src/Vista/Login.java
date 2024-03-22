@@ -101,7 +101,7 @@ public class Login extends javax.swing.JFrame {
         jLabel1.setText("SmartSales");
 
         jLabel2.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
-        jLabel2.setText("Nombre de Usuario");
+        jLabel2.setText("Correo Electronico");
 
         txtCorreo.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
 
